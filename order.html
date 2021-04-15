@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Flower power!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="images/flower-icon.png" />
+    <link rel="stylesheet" type="text/css" href="vendor/normalize.css">
+    <link rel="stylesheet" type="text/css" href="styles/main.css">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+
+
+<body class="content body-header-fixed">
+    <header class="header header-fixed primary-color-bg">
+        <nav class="navigation container">
+            <div class="menu">
+                <a href="index.html" class="link menu-item">Home</a>
+                <a href="order.html" class="link menu-item link-active">Order</a>
+                <a href="index.html" class="link">
+                    <img class="scaled-image scaled-image-fixed" src="images/logo.svg" alt="Company logo">
+                </a>
+                <a href="#" class="link menu-item">Contact us</a>
+                <a href="#" class="link menu-item cart-menu">
+                    <img src="images/cart-icon.svg" alt="Cart icon">
+                    <div class="cart-menu-status">
+                        <div id="cart-items">0</div>
+                        <div>items</div>
+                    </div>
+                </a>
+            </div>
+        </nav>
+    </header>
+    <main class="main">
+        
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <div class="menu menu-distributed">
+                <div class="infobox infobox-marginless infobox-copyright">
+                    <h4 class="infobox-title infobox-title-secondary-color main-color-emphasized">
+                        Copy this as much as you like
+                    </h4>
+                </div>
+                <div class="infobox infobox-marginless infobox-flower">
+                    <h4 class="infobox-title infobox-title-secondary-color main-color-emphasized">
+                        Flower power
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <template id="category-template">
+        <section class="section secondary-color-bg">
+            <div class="centered-container">
+                <h1 class="decorated-title font-secondary main-color">
+                    <span class="main-color-emphasized">Category name</span>
+                    Inventory</h1>
+                <div class="separator"></div>
+            </div>
+            <div class="gallery">
+            </div>
+        </section>
+    </template>
+    <template id="product-template">
+        <div class="photo-box" data-id="">
+            <img class="photo-box-image" src=""></img>
+            <div class="photo-box-title font-secondary main-color-emphasized">Product name</div>
+            <div class="cart-btn" onclick=""></div>
+        </div>
+    </template>
+    <script>
+
+        let getData = async function () {
+            let response = await fetch("https://web1lab2.azurewebsites.net/categories");
+            let data = await response.json();
+            addCategories(data);
+        }
+
+        let addCategories = async function (categories) {
+            var main = document.querySelector('main');
+            var categoryTemplate = document.querySelector('#category-template');
+            var količina_u_košarici = 0;
+            for (let index = 0; index < categories.length; index++) {
+                var category = categoryTemplate.content.cloneNode(true);
+                let categoryTitleElement = category.querySelector('.decorated-title > span');
+                categoryTitleElement.textContent = categories[index].name;
+                //
+                let categoryGallery = category.querySelector(".gallery");
+
+                    let getPictures = async function (gallery){
+                        let response = await fetch ("https://web1lab2.azurewebsites.net/products?categoryId=" + categories[index].id);
+                        let pictures = await response.json();
+
+                        let picture_template  = document.querySelector("#product-template");
+                        //let gallery = document.querySelector(".gallery");
+                        var Dodaj_u_kosaricu = async function (id){
+                                količina_u_košarici++;
+                                let količina = JSON.parse(window.localStorage.getItem(id));
+                                količina = količina + 1;
+                                console.log(id, količina);
+                                window.localStorage.setItem(id, količina);
+                                let cart_items = document.getElementById("cart-items");
+                                cart_items.textContent = količina_u_košarici;
+
+                                }
+                        for (let j = 0 ; j < pictures.length; j ++) {
+
+                            
+                            let picture = picture_template.content.cloneNode(true);
+                            let photo_box = picture.querySelector(".photo-box");
+                            photo_box.id = pictures[j].id;
+                            let picture_img = picture.querySelector(".photo-box > img");
+                            picture_img.src = pictures[j].imageUrl;
+                            let picture_text = picture.querySelector(".photo-box-title");
+                            picture_text.textContent = pictures[j].name;
+                            let picture_cart = picture.querySelector(".cart-btn");
+                            let element = document.createElement("img");
+                            element.type = "image";
+                            element.src = "images/cart-icon.svg";
+                            picture_cart.addEventListener("click", function (){ Dodaj_u_kosaricu(pictures[j].id)});
+                            picture_cart.appendChild(element);
+
+                            
+                            //console.log(pictures[j].id);
+                            window.localStorage.setItem(pictures[j].id , "0");
+                            //console.log(window.localStorage.getItem(pictures[j].id));
+                            gallery.appendChild(picture);
+                        }
+                    }
+                    
+                    getPictures(categoryGallery);
+                    
+                //
+                main.appendChild(category);
+            }
+        };
+        getData();
+    </script>
+</body>
+
+</html>
+
+
+    
