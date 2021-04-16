@@ -96,12 +96,18 @@
                         let picture_template  = document.querySelector("#product-template");
                         //let gallery = document.querySelector(".gallery");
                         var Dodaj_u_kosaricu = async function (id){
-                            let količina = JSON.parse(window.localStorage.getItem(id));
-                            količina_u_košarici = 0;
-                            količina = količina + 1;
-                                console.log(id, količina);
+                            console.log(localStorage);
+                            if (!localStorage.getItem(id)){
+                                var količina = 0;
+                                window.localStorage.setItem(id , količina++);
+                            } else {
+                                količina = JSON.parse(window.localStorage.getItem(id));
+                                količina++;
+                            }
+                            
+                            var količina_u_košarici = 0;
                                 window.localStorage.setItem(id, količina);
-                                for (let i = 0 ; i < window.localStorage.length ; i++){
+                                for (let i = 0 ; i <= window.localStorage.length ; i++){
                                     let kol = JSON.parse(window.localStorage.getItem(i));
                                     količina_u_košarici += kol;
                                 }
@@ -129,7 +135,8 @@
 
                             
                             //console.log(pictures[j].id);
-                            window.localStorage.setItem(pictures[j].id , "0");
+                            
+                           
                             //console.log(window.localStorage.getItem(pictures[j].id));
                             gallery.appendChild(picture);
                         }
@@ -139,12 +146,14 @@
                     
                 //
                 main.appendChild(category);
+                
             }
         };
         let količina_u_košarici = 0;
-        for (let i = 0 ; i < window.localStorage.length ; i++){
+        for (let i = 0 ; i <= window.localStorage.length ; i++){
                                     let kol = JSON.parse(window.localStorage.getItem(i));
                                     količina_u_košarici += kol;
+                                    console.log(i, kol);
                                 }
                                
                                 let cart_items = document.getElementById("cart-items");

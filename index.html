@@ -12,16 +12,22 @@
 </head>
 
 <body class="content">
-    <header class="header primary-color-bg">
+    <header class="header header-fixed primary-color-bg">
         <nav class="navigation container">
             <div class="menu">
                 <a href="index.html" class="link menu-item">Home</a>
-                <a href="#" class="link menu-item">Order</a>
+                <a href="order.html" class="link menu-item link-active">Order</a>
                 <a href="index.html" class="link">
                     <img class="scaled-image scaled-image-fixed" src="images/logo.svg" alt="Company logo">
                 </a>
-                <a href="#" class="link menu-item">Checkout</a>
                 <a href="#" class="link menu-item">Contact us</a>
+                <a href="#" class="link menu-item cart-menu">
+                    <img src="images/cart-icon.svg" alt="Cart icon">
+                    <div class="cart-menu-status">
+                        <div id="cart-items">0</div>
+                        <div>items</div>
+                    </div>
+                </a>
             </div>
         </nav>
     </header>
@@ -108,6 +114,17 @@
             <div class="separator"></div>
         </section>
     </main>
+    <script>
+        let količina_u_košarici = 0;
+        for (let i = 0 ; i <= window.localStorage.length ; i++){
+                                    let kol = JSON.parse(window.localStorage.getItem(i));
+                                    količina_u_košarici += kol;
+                                    console.log(i, kol);
+                                }
+                               
+                                let cart_items = document.getElementById("cart-items");
+                                cart_items.textContent = količina_u_košarici;
+    </script>
     <footer class="footer">
         <div class="container">
             <div class="menu menu-distributed">
